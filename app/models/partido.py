@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, List, Optional
 from sqlmodel import Field, Relationship, SQLModel
-from app.models.enums import Tipo_cancha, EstadoPartido
+from app.models.enums import EstadoPartido
 from app.models.partido_usuario import PartidoUsuario
 from datetime import datetime, timezone
 
@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 if TYPE_CHECKING:
     from app.models.usuario import Usuario
     from app.models.cancha import Cancha
-    
+    from app.models.invitacion import Invitacion
     
 class PartidoBase(SQLModel):
     horario: datetime 

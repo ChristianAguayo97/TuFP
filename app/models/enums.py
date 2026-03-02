@@ -17,3 +17,8 @@ class NombreEquipo(str, Enum):
     equipo_a = "Equipo A"
     equipo_b = "Equipo B"
     
+class EstadoInvitacion(str, Enum):
+    aceptada = "aceptada"
+    rechazada = "rechazada"
+    pendiente = "pendiente"
+

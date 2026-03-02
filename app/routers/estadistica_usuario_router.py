@@ -1,4 +1,4 @@
-from app.models.estadistica_usuario import CrearEstaditica, MostrarEstadistica, EstadisticaUsuario
+from app.models.estadistica_usuario import CrearEstadistica, MostrarEstadistica, EstadisticaUsuario
 from fastapi import APIRouter
 
 

@@ -15,7 +15,7 @@ class EstadisticaBase(SQLModel):
     tecnica: Decimal = Field(default=Decimal("0.00"), max_digits=4, decimal_places=2)
     fisico: Decimal = Field(default=Decimal("0.00"), max_digits=4, decimal_places=2)
 
-class CrearEstaditica(EstadisticaBase):
+class CrearEstadistica(EstadisticaBase):
     pass
 
 class MostrarEstadistica(EstadisticaBase):
@@ -41,7 +41,7 @@ class EstadisticaUsuario(EstadisticaBase, table = True):
     fisico_xp: Decimal  = Field(default=Decimal("0.0000"), max_digits=6, decimal_places=4)
     
     rating_total: Decimal = Field(default=Decimal("0.0000"), max_digits=5, decimal_places=2)
-    update_at: datetime = Field(default_factory=datetime.now,sa_column_kwargs={"onupdate": datetime.now(timezone.utc)})
+    update_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
     
     usuario: Optional["Usuario"] = Relationship(back_populates="estadisticas")
     
