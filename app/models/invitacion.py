@@ -23,7 +23,7 @@ class MostrarInvitacion(InvitacionBase):
         "from_attributes": True
     }
 
-class ReponderInvitacion():
+class ResponderInvitacion():
     estado: EstadoInvitacion
     
 class Invitacion(InvitacionBase, table=True):

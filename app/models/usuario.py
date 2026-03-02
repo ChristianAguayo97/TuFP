@@ -2,13 +2,13 @@ from datetime import datetime, timezone
 from typing import TYPE_CHECKING, List, Optional
 from sqlmodel import Field, SQLModel, Relationship
 from app.models.partido_usuario import PartidoUsuario
-
+from app.models.equipo_usuario import EquipoUsuario
 
 if TYPE_CHECKING:
     from app.models.estadistica_usuario import EstadisticaUsuario
     from app.models.partido import Partido
     from app.models.invitacion import Invitacion
-
+    from app.models.equipo import Equipo
 
 
 class UsuarioBase(SQLModel):
@@ -53,6 +53,9 @@ class Usuario(UsuarioBase, table=True):
     partidos_perdidos: int = Field(default=0)
     partidos_empatados: int = Field(default=0)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
+    
     partido: List ["Partido"] = Relationship(back_populates="jugadores", link_model= PartidoUsuario)
+    equipos: List ["Equipo"] = Relationship(back_populates="jugadores_equipo", link_model=EquipoUsuario)
+
     invitaciones: List ["Invitacion"] = Relationship(back_populates="usuario")
     estadisticas: Optional["EstadisticaUsuario"] = Relationship(back_populates="usuario")

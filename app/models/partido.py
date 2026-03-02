@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 if TYPE_CHECKING:
     from app.models.usuario import Usuario
     from app.models.cancha import Cancha
-    from app.models.invitacion import Invitacion
+    from app.models.equipo import Equipo
     
 class PartidoBase(SQLModel):
     horario: datetime 
@@ -51,7 +51,9 @@ class Partido(PartidoBase, table=True):
     link_compartir: str = Field(max_length=255, unique= True, nullable=False)
     jugadores_minimos: int = Field(nullable=False)
     equipos_generados: bool = Field(default=False)
+    
     jugadores: List ["Usuario"] = Relationship(back_populates="partido", link_model=PartidoUsuario)
+    equipos: List ["Equipo"] = Relationship(back_populates="partido")
     cancha: Optional["Cancha"] = Relationship(back_populates="partidos")
     creador: Optional["Usuario"] = Relationship()
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)

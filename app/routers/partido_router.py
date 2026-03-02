@@ -1,6 +1,6 @@
 from app.models.partido import MostrarPartido, CrearPartido, Partido
 from app.models.partido_usuario import PartidoUsuario
-from app.models.invitacion import Invitacion, MostrarInvitacion, ReponderInvitacion
+from app.models.invitacion import Invitacion, MostrarInvitacion, ResponderInvitacion
 from fastapi import APIRouter
 
 
