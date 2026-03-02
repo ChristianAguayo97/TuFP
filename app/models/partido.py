@@ -10,6 +10,7 @@ if TYPE_CHECKING:
     from app.models.usuario import Usuario
     from app.models.cancha import Cancha
     from app.models.equipo import Equipo
+    from app.models.resultado import Resultado
     
 class PartidoBase(SQLModel):
     horario: datetime 
@@ -56,6 +57,8 @@ class Partido(PartidoBase, table=True):
     equipos: List ["Equipo"] = Relationship(back_populates="partido")
     cancha: Optional["Cancha"] = Relationship(back_populates="partidos")
     creador: Optional["Usuario"] = Relationship()
+    resultado: Optional["Resultado"] = Relationship(back_populates="partido")
+    
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
 
     
