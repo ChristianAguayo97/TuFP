@@ -10,8 +10,10 @@ class CanchaBase(SQLModel):
     nombre: str = Field (max_length=100, nullable=False)
     direccion: Optional[str] = Field(default=None)
     tipo_cancha: Tipo_cancha = Field(default=None)
-    
 
+class CrearCancha(CanchaBase):
+    pass
+    
 class MostrarCancha(CanchaBase):
     id: int
 

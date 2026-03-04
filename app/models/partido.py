@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, List, Optional
+from pydantic import model_validator
 from sqlmodel import Field, Relationship, SQLModel
 from app.models.enums import EstadoPartido
 from app.models.partido_usuario import PartidoUsuario
@@ -20,7 +21,7 @@ class PartidoBase(SQLModel):
     
 class CrearPartido(PartidoBase):
     id_cancha: int
-    usuarios_invitados: List [int] = []
+    usuarios_invitados: List [str] = []
     
 class MostrarJugadorAceptado(SQLModel):
     id: int
@@ -39,9 +40,24 @@ class MostrarPartido(PartidoBase):
     equipos_generados: bool
     created_at: datetime
     jugadores_aceptados: List[MostrarJugadorAceptado] = []
+
     model_config = {
         "from_attributes": True
     }
+
+    @classmethod
+    def from_partido(cls, partido: "Partido") -> "MostrarPartido":
+        return cls(
+            horario=partido.horario,
+            id=partido.id,
+            estado=partido.estado,
+            link_compartir=partido.link_compartir,
+            jugadores_minimos=partido.jugadores_minimos,
+            equipos_generados=partido.equipos_generados,
+            created_at=partido.created_at,
+            jugadores_aceptados=partido.jugadores
+        )
+
 
 class Partido(PartidoBase, table=True):
     __tablename__ = "partido"
