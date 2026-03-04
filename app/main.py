@@ -3,6 +3,8 @@ from fastapi import FastAPI
 from app.config.db import engine
 from app import models
 from app.routers.auth import seguridad_router
+from app.routers.usuario_router import usuario_router
+
 
 
 SQLModel.metadata.create_all(engine)
@@ -10,6 +12,7 @@ SQLModel.metadata.create_all(engine)
 app = FastAPI()
 
 app.include_router(seguridad_router)
+app.include_router(usuario_router)
 
 
 @app.get("/")

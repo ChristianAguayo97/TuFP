@@ -3,9 +3,9 @@ from typing import TYPE_CHECKING, List, Optional
 from sqlmodel import Field, SQLModel, Relationship
 from app.models.partido_usuario import PartidoUsuario
 from app.models.equipo_usuario import EquipoUsuario
+from app.models.estadistica_usuario import EstadisticaUsuario, MostrarEstadistica, EstadisticaBase
 
-if TYPE_CHECKING:
-    from app.models.estadistica_usuario import EstadisticaUsuario
+if TYPE_CHECKING: 
     from app.models.partido import Partido
     from app.models.invitacion import Invitacion
     from app.models.equipo import Equipo
@@ -32,6 +32,8 @@ class ActualizarUsuario(SQLModel):
     apellido: Optional[str] = None
     foto_perfil_url: Optional[str] = None
     username: Optional[str] = None
+    contrasena: Optional[str] = None
+
 
 class MostrarUsuario(UsuarioBase):
     id: int
@@ -40,11 +42,23 @@ class MostrarUsuario(UsuarioBase):
     partidos_perdidos: int
     partidos_empatados: int
     created_at: datetime
-    
+    estadisticas: Optional[MostrarEstadistica] = None
     model_config = {
         "from_attributes": True
     }
     
+class MostrarUsuarioSimple(SQLModel):
+    id: int
+    username: str
+    foto_perfil: Optional[str] = None
+    titulo: Optional[str] = None
+    partidos_ganados: int
+    partidos_perdidos: int
+    partidos_empatados: int
+    estadisticas: Optional[EstadisticaBase] = None
+    model_config = {
+        "from_attributes": True
+    }  
 
 class Usuario(UsuarioBase, table=True):
     __tablename__ = "usuario"
