@@ -9,6 +9,8 @@ if TYPE_CHECKING:
     from app.models.partido import Partido
     from app.models.invitacion import Invitacion
     from app.models.equipo import Equipo
+    from app.models.resultado import Resultado
+
 
 
 class UsuarioBase(SQLModel):
@@ -53,9 +55,10 @@ class Usuario(UsuarioBase, table=True):
     partidos_perdidos: int = Field(default=0)
     partidos_empatados: int = Field(default=0)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
+    resultados_ingresados: List["Resultado"] = Relationship(back_populates="ingresado_por_usuario")
     
     partido: List ["Partido"] = Relationship(back_populates="jugadores", link_model= PartidoUsuario)
-    equipos: List ["Equipo"] = Relationship(back_populates="jugadores_equipo", link_model=EquipoUsuario)
+    equipo: List ["Equipo"] = Relationship(back_populates="jugadores_equipo", link_model=EquipoUsuario)
 
     invitaciones: List ["Invitacion"] = Relationship(back_populates="usuario")
     estadisticas: Optional["EstadisticaUsuario"] = Relationship(back_populates="usuario")

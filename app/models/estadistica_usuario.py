@@ -16,7 +16,11 @@ class EstadisticaBase(SQLModel):
     fisico: Decimal = Field(default=Decimal("0.00"), max_digits=4, decimal_places=2)
 
 class CrearEstadistica(EstadisticaBase):
-    pass
+    ataque: int = Field(ge=1, le=5)
+    defensa: int = Field(ge=1, le=5)
+    creacion: int = Field(ge=1, le=5)
+    tecnica: int = Field(ge=1, le=5)
+    fisico: int = Field(ge=1, le=5)
 
 class MostrarEstadistica(EstadisticaBase):
     id: int
@@ -42,6 +46,7 @@ class EstadisticaUsuario(EstadisticaBase, table = True):
     
     rating_total: Decimal = Field(default=Decimal("0.0000"), max_digits=5, decimal_places=2)
     update_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc), nullable=False)
+    stats_completadas: bool = Field(default=False, nullable=False)
     
     usuario: Optional["Usuario"] = Relationship(back_populates="estadisticas")
     
