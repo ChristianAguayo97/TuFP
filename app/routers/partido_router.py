@@ -1,7 +1,6 @@
-from typing import List
-
 from fastapi import APIRouter
-from app.models.partido import Partido, MostrarPartido, CrearPartido, MostrarJugadorAceptado 
+from app.models.enums import EstadoPartido
+from app.models.partido import Partido, MostrarPartido, CrearPartido, PartidoUsuario
 from app.models.usuario import Usuario
 from app.routers.deps.db_sessions import SessionDep, UsuarioActual
 from sqlmodel import select
@@ -55,3 +54,21 @@ def obtener_partido(id_partido: int, db: SessionDep):
         raise HTTPException(status_code=404, detail="Partido no encontrado")
     return MostrarPartido.from_partido(partido).model_dump()
 
+@partido_router.post("/unirse/{link}", response_model=MostrarPartido)
+def unirse_por_link(link: str, db: SessionDep, usuario_actual: UsuarioActual):
+    partido = db.exec(select(Partido).where(Partido.link_compartir == link)).first()
+    if not partido:
+        raise HTTPException (status_code=404, detail="Link Invalido")
+    if partido.estado != EstadoPartido.abierto:
+        raise HTTPException (status_code=400, detail= "El partido no está disponible")
+    registrado = db.exec(select(PartidoUsuario).where(
+        PartidoUsuario.id_partido == partido.id,
+        PartidoUsuario.id_usuario == usuario_actual
+        )).first()
+    if registrado:
+        raise HTTPException(status_code=400, detail="Ya esta registrado en el partido")
+    
+    partido.jugadores.append(usuario_actual)
+    db.commit()
+    db.refresh(partido)
+    return MostrarPartido.from_partido(partido).model_dump
