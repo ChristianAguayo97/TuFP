@@ -21,7 +21,7 @@ class UsuarioBase(SQLModel):
     foto_perfil: Optional[str] = Field(default=None)
     
 class CrearUsuario(UsuarioBase):
-    contrasena: str
+    contrasena: str = Field(min_length=8, max_length=32)
 
 class LoginUsuario(SQLModel):
     username_o_email: str

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
-from app.models.enums import EstadoPartido
 from app.models.partido import Partido, MostrarPartido, CrearPartido, PartidoUsuario
 from app.models.usuario import Usuario
+from app.models.enums import EstadoPartido
 from app.routers.deps.db_sessions import SessionDep, UsuarioActual
 from sqlmodel import select
 from fastapi import HTTPException
@@ -47,7 +47,7 @@ def crear_partido(datos: CrearPartido, db: SessionDep, usuario_actual: UsuarioAc
 
     return MostrarPartido.from_partido(nuevo_partido)
 
-@partido_router.get("/{id_partido}", response_model=MostrarPartido)  # ← sacás List[]
+@partido_router.get("/{id_partido}", response_model=MostrarPartido)  
 def obtener_partido(id_partido: int, db: SessionDep):
     partido = db.exec(select(Partido).where(Partido.id == id_partido)).first()
     if not partido:
@@ -58,17 +58,19 @@ def obtener_partido(id_partido: int, db: SessionDep):
 def unirse_por_link(link: str, db: SessionDep, usuario_actual: UsuarioActual):
     partido = db.exec(select(Partido).where(Partido.link_compartir == link)).first()
     if not partido:
-        raise HTTPException (status_code=404, detail="Link Invalido")
+        raise HTTPException(status_code=404, detail="Link inválido")
     if partido.estado != EstadoPartido.abierto:
-        raise HTTPException (status_code=400, detail= "El partido no está disponible")
-    registrado = db.exec(select(PartidoUsuario).where(
-        PartidoUsuario.id_partido == partido.id,
-        PartidoUsuario.id_usuario == usuario_actual
-        )).first()
-    if registrado:
-        raise HTTPException(status_code=400, detail="Ya esta registrado en el partido")
-    
+        raise HTTPException(status_code=400, detail="El partido no está disponible")
+    ya_esta = db.exec(
+        select(PartidoUsuario).where(
+            PartidoUsuario.id_partido == partido.id,
+            PartidoUsuario.id_usuario == usuario_actual.id
+        )
+    ).first()
+    if ya_esta:
+        raise HTTPException(status_code=400, detail="Ya estás en este partido")
     partido.jugadores.append(usuario_actual)
     db.commit()
     db.refresh(partido)
-    return MostrarPartido.from_partido(partido).model_dump
+
+    return MostrarPartido.from_partido(partido)
