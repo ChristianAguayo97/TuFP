@@ -41,6 +41,7 @@ function UsuarioLogueado({ setUsuario }) {
                 if (respuesta.ok) {
                     const usuarioData = await respuesta.json();
                     setDatos(usuarioData);
+                    setUsuario(usuarioData);
                     setCargando(false);
                 }
             } catch (error) {

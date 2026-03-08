@@ -47,7 +47,7 @@ function App() {
             <Route path="/registro" element={<Registro setUsuario={setUsuario} />} />
             <Route path="/ingresar-estadisticas" element={
               <RutaProtegida usuario={usuario}>
-                <Estadisticas />
+                <Estadisticas usuario={usuario} setUsuario={setUsuario} />
               </RutaProtegida>
             } />
             <Route path="/usuario-logueado" element={

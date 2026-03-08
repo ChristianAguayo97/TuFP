@@ -26,6 +26,7 @@ class MostrarEstadistica(EstadisticaBase):
     id: int
     id_usuario: int
     rating_total: Decimal
+    stats_completadas: bool
     update_at: datetime 
     model_config = {
         "from_attributes": True

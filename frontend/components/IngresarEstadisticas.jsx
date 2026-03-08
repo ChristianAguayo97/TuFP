@@ -1,14 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 
-function Estadisticas() {
+function Estadisticas({ usuario, setUsuario }) {
     const navigate = useNavigate();
+    useEffect(() => {
+        if (usuario?.estadisticas?.stats_completadas) {
+            navigate('/usuario-logueado', { replace: true });
+        }
+    }, [usuario, navigate]);
+
     const [stats, setStats] = useState({
         ataque: 3,
         defensa: 3,
         creacion: 4,
         tecnica: 4,
-        fisico: 4
+        fisico: 4,
     });
 
     const handleChange = (e) => {
@@ -20,6 +26,7 @@ function Estadisticas() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         if (stats.ataque + stats.defensa + stats.creacion + stats.tecnica + stats.fisico !== 18) {
             alert("La suma de tus estadisticas debe ser exactamente 18");
             return;
@@ -30,17 +37,21 @@ function Estadisticas() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                credentials: 'include', 
+                credentials: 'include',
                 body: JSON.stringify(stats),
             });
 
             if (respuesta.ok) {
                 console.log("¡Estadísticas guardadas exitosamente!");
-                navigate('/usuario-logueado');
+                navigate('/usuario-logueado', {replace: true});
             } else {
                 const errorData = await respuesta.json();
-                console.error("Error del servidor:", errorData);
-                alert("Hubo un error: " + errorData.detail);
+                if (respuesta.status === 403) {
+                    alert("Ya completaste tus estadisticas anteriormente");
+                    navigate('/usuario-logueado', {replace: true});
+                } else {
+                    alert("Hubo un error: " + errorData.detail);
+                }
             }
         } catch (error) {
             console.error("Error al conectar con el servidor:", error);

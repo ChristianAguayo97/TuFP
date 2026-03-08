@@ -72,6 +72,9 @@ def completar_estadisticas(datos: CrearEstadistica, db: SessionDep, usuario_actu
     if not estadistica:
         raise HTTPException(status_code=404, detail="Estadísticas no encontradas")
 
+    if estadistica.stats_completadas:
+        raise HTTPException(status_code=403, detail="Las estadísticas ya están completas")
+    
     stats = [datos.ataque, datos.defensa, datos.creacion, datos.tecnica, datos.fisico]
     if sum(stats) != 18:
         raise HTTPException(status_code=400, detail="La suma de estadísticas debe ser exactamente 18")
