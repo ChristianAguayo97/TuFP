@@ -1,6 +1,6 @@
 from datetime import timedelta
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import APIRouter, Depends, HTTPException, status, Response
+from fastapi.security import  OAuth2PasswordRequestForm
 from sqlmodel import select
 from app.routers.deps.db_sessions import SessionDep, UsuarioActual
 from app.models.estadistica_usuario import EstadisticaUsuario, CrearEstadistica, MostrarEstadistica
@@ -46,7 +46,8 @@ def registrar_usuario(usuario: CrearUsuario, db: SessionDep):
 @seguridad_router.post("/token")
 def iniciar_sesion(
     db: SessionDep,
-    form_data: OAuth2PasswordRequestForm = Depends()):
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    response: Response = None):
     usuario = db.exec(
         select(Usuario).where(
             (Usuario.username == form_data.username) | (Usuario.email == form_data.username)
@@ -58,6 +59,7 @@ def iniciar_sesion(
     access_token = crear_token_acceso(
         data={"sub": usuario.username}, tiempo_expiracion=access_token_expires
     )
+    response.set_cookie(key="access_token", value=access_token, httponly=True, samesite="lax")
     return {"access_token": access_token, "token_type": "bearer"}
     
 @seguridad_router.post("/completar-estadisticas", response_model=MostrarEstadistica)

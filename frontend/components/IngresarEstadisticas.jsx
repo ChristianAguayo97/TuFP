@@ -10,6 +10,7 @@ function Estadisticas() {
         tecnica: 4,
         fisico: 4
     });
+
     const handleChange = (e) => {
         setStats({
             ...stats,
@@ -28,12 +29,13 @@ function Estadisticas() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
                 },
+                credentials: 'include', 
                 body: JSON.stringify(stats),
             });
+
             if (respuesta.ok) {
-                console.log("¡Usuario registrado exitosamente!");
+                console.log("¡Estadísticas guardadas exitosamente!");
                 navigate('/usuario-logueado');
             } else {
                 const errorData = await respuesta.json();
@@ -44,6 +46,7 @@ function Estadisticas() {
             console.error("Error al conectar con el servidor:", error);
         }
     };
+
     return (
         <div className="p-8">
             <h2>Ingresa tus Estadísticas</h2>
@@ -76,4 +79,5 @@ function Estadisticas() {
         </div>
     );
 }
+
 export default Estadisticas;

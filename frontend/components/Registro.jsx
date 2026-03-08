@@ -1,7 +1,7 @@
-import { use, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
-function Registro() {
+function Registro({ setUsuario }) {
     const navigate = useNavigate();
     const [datos, setDatos] = useState({
         nombre: '',
@@ -18,7 +18,7 @@ function Registro() {
         });
     };
 
-const handleSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const respuesta = await fetch(`${import.meta.env.VITE_API_URL}auth/registro`, {
@@ -26,13 +26,14 @@ const handleSubmit = async (e) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(datos), 
+                credentials: 'include', 
+                body: JSON.stringify(datos),
             });
 
             if (respuesta.ok) {
-                console.log("¡Usuario registrado exitosamente!");
                 const inicio_sesion = await fetch(`${import.meta.env.VITE_API_URL}auth/token`, {
                     method: 'POST',
+                    credentials: 'include',
                     body: new URLSearchParams({
                         username: datos.username,
                         password: datos.contrasena
@@ -40,12 +41,12 @@ const handleSubmit = async (e) => {
                 });
 
                 if (inicio_sesion.ok) {
-                    const tokenData = await inicio_sesion.json();
-                    localStorage.setItem('token', tokenData.access_token);
+                    const usuarioData = await inicio_sesion.json();
+                    setUsuario(usuarioData); 
                     navigate('/ingresar-estadisticas');
                 } else {
                     console.error("No se pudo auto-loguear al usuario");
-                    navigate('/login');
+                    navigate('/registro');
                 }
             } else {
                 const errorData = await respuesta.json();
@@ -56,6 +57,7 @@ const handleSubmit = async (e) => {
             console.error("Error al conectar con el servidor:", error);
         }
     };
+
     return (
         <div className="p-8">
             <h2>Registro de Usuario</h2>
@@ -110,6 +112,7 @@ const handleSubmit = async (e) => {
         </div>
     );
 }
+
 export default Registro;
 
 
