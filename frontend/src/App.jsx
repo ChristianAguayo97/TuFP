@@ -2,6 +2,7 @@ import Registro from "../components/Registro.jsx";
 import Estadisticas from "../components/IngresarEstadisticas.jsx";
 import RutaProtegida from "../components/RutaProtegida.jsx";
 import UsuarioLogueado from "../components/UsuarioLogueado.jsx";
+import Login from "../components/Login.jsx";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import { useState, useEffect } from 'react';
@@ -42,6 +43,7 @@ function App() {
         {usuario && <Sidebar />}
         <main className="flex-1 overflow-y-auto p-8">
           <Routes>
+            <Route path="/login" element={<Login setUsuario={setUsuario} />} />
             <Route path="/registro" element={<Registro setUsuario={setUsuario} />} />
             <Route path="/ingresar-estadisticas" element={
               <RutaProtegida usuario={usuario}>
@@ -53,12 +55,11 @@ function App() {
                 <UsuarioLogueado setUsuario={setUsuario} />
               </RutaProtegida>
             } />
-            <Route path="/" element={<Navigate to={usuario ? "/usuario-logueado" : "/registro"} />} />
+            <Route path="/" element={<Navigate to={usuario ? "/usuario-logueado" : "/login"} />} />
           </Routes>
         </main>
       </div>
     </BrowserRouter>
   );
 }
-
 export default App;
