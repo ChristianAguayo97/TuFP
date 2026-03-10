@@ -6,7 +6,7 @@ function Sidebar() {
             <h2 className="text-2xl font-bold mb-10 text-[#00df9a]">TuFP</h2>
             {/* Lista de Navegación */}
             <nav className="flex flex-col gap-6">
-                <NavLink to="/perfil" className={({ isActive }) => isActive ? "text-[#00df9a] font-bold flex items-center gap-3" : "text-gray-400 hover:text-white flex items-center gap-3"}>
+                <NavLink to="/usuario-logueado" className={({ isActive }) => isActive ? "text-[#00df9a] font-bold flex items-center gap-3" : "text-gray-400 hover:text-white flex items-center gap-3"}>
                     <span>👤</span> Perfil
                 </NavLink>
                 <NavLink to="/partidos" className={({ isActive }) => isActive ? "text-[#00df9a] font-bold flex items-center gap-3" : "text-gray-400 hover:text-white flex items-center gap-3"}>

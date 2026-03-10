@@ -1,6 +1,5 @@
 import Registro from "../components/Registro.jsx";
 import Estadisticas from "../components/IngresarEstadisticas.jsx";
-import RutaProtegida from "../components/RutaProtegida.jsx";
 import UsuarioLogueado from "../components/UsuarioLogueado.jsx";
 import Login from "../components/Login.jsx";
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
@@ -43,19 +42,15 @@ function App() {
         {usuario && <Sidebar />}
         <main className="flex-1 overflow-y-auto p-8">
           <Routes>
-            <Route path="/login" element={<Login setUsuario={setUsuario} />} />
-            <Route path="/registro" element={<Registro setUsuario={setUsuario} />} />
-            <Route path="/ingresar-estadisticas" element={
-              <RutaProtegida usuario={usuario}>
-                <Estadisticas usuario={usuario} setUsuario={setUsuario} />
-              </RutaProtegida>
-            } />
+            <Route path="/login" element={usuario ? <Navigate to="/usuario-logueado" /> : <Login setUsuario={setUsuario} />} />
+            <Route path="/registro" element={usuario ? <Navigate to="/usuario-logueado" /> : <Registro setUsuario={setUsuario} />} />
             <Route path="/usuario-logueado" element={
-              <RutaProtegida usuario={usuario}>
-                <UsuarioLogueado setUsuario={setUsuario} />
-              </RutaProtegida>
+              usuario ? <UsuarioLogueado setUsuario={setUsuario} /> : <Navigate to="/login" />
             } />
-            <Route path="/" element={<Navigate to={usuario ? "/usuario-logueado" : "/login"} />} />
+            <Route path="/ingresar-estadisticas" element={
+              usuario ? <Estadisticas usuario={usuario} setUsuario={setUsuario} /> : <Navigate to="/login" />
+            } />
+            <Route path="*" element={<Navigate to={usuario ? "/usuario-logueado" : "/login"} />} />
           </Routes>
         </main>
       </div>
